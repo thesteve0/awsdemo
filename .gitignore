@@ -57,3 +57,4 @@ docs/_build/
 target/
 /.idea/
 /v3simple-spatial.iml
+/awsdemo.iml
