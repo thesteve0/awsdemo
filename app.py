@@ -6,8 +6,8 @@ import os
 
 
 @route('/')
-def index(filename):
-    return static_file(filename, root='/')
+def index():
+    return static_file("index.html", root='./')
     #return "<h1> hello OpenShift Ninja without DB</h1>"
 
 
@@ -54,4 +54,4 @@ def js(filename):
 
 
 if __name__ == '__main__':
-    run(host='0.0.0.0', port=8080, debug=True)
+    run(host='0.0.0.0', port=8080, debug=True, reloader=True)
