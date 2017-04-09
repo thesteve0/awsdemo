@@ -1,3 +1,4 @@
+﻿CREATE EXTENSTION POSTGIS;
 
 CREATE TABLE parkpoints
 (

@@ -1,13 +1,14 @@
 __author__ = 'spousty'
 
 import psycopg2
-from bottle import route, run, get, DEBUG
+from bottle import route, run, get, static_file, DEBUG
 import os
 
 
 @route('/')
-def index():
-    return "<h1> hello OpenShift Ninja without DB</h1>"
+def index(filename):
+    return static_file(filename, root='/')
+    #return "<h1> hello OpenShift Ninja without DB</h1>"
 
 
 # since this is a read only talk to the replicas
@@ -32,6 +33,24 @@ def dbexample():
     conn.close()
 
     return result_string
+
+#For Static files
+
+@get("/static/css/<filename:re:.*\.css>")
+def css(filename):
+    return static_file(filename, root="static/css")
+
+@get("/static/font/<filename:re:.*\.(eot|otf|svg|ttf|woff|woff2?)>")
+def font(filename):
+    return static_file(filename, root="static/font")
+
+@get("/static/img/<filename:re:.*\.(jpg|png|gif|ico|svg)>")
+def img(filename):
+    return static_file(filename, root="static/img")
+
+@get("/static/js/<filename:re:.*\.js>")
+def js(filename):
+    return static_file(filename, root="static/js")
 
 
 if __name__ == '__main__':
