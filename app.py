@@ -15,8 +15,8 @@ def index():
 @get('/db')
 def dbexample():
     try:
-        conn = psycopg2.connect(database=os.environ.get('PG_DATABASE'), user=os.environ.get('PG_USER'),
-                                host=os.environ.get('REPLICA_SERVICE_HOST'), password=os.environ.get('PG_PASSWORD'))
+        conn = psycopg2.connect(database=os.environ.get('POSTGRES_DB'), user=os.environ.get('POSTGRES_USER'),
+                                host=os.environ.get('POSTGRES_HOST'), password=os.environ.get('POSTGRES_PASSWORD'))
     except:
         print(os.environ.get('REPLICA_SERVICE_HOST'))
 
