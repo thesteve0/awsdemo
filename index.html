@@ -1,8 +1,94 @@
 <!-- <link type="text/css" href="/static/css/main.css" rel="stylesheet"> -->
 
+<html>
+    <head>
+        <title>Looking At Summit Attendees</title>
+        <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            font-family: 'Milonga', cursive;
+        }
+        .leaflet-container .leaflet-control-zoom {
+            margin-left: 13px;
+            margin-top: 70px;
+        }
 
 
-hello world
+
+        #map { z-index: 1;}
+        #title { z-index: 2; position: absolute; left: 10px; }
+    </style>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+        <script type="text/javascript" src="/static/js/leaflet-providers.js"></script>
+
+    </head>
+    <body>
+
+    <div id="map" class="map"></div>
+
+    </body>
+    <script>
+        var map = L.map('map').setView([37.038, -100.06], 8);
+        var zippinLayerGroup = L.layerGroup().addTo(map);
+        var airportpinLayerGroup = L.layerGroup().addTo(map);
+        var stamenLayer = L.tileLayer.provider('Stamen.Terrain').addTo(map);
+
+        function getPins(e){
+            bounds = map.getBounds();
+            zipurl = "http://postgisservice-local.apps.data.molw.io/ws/birds/byspecies/"+bird;
+
+            //TODO fix this
+            airporturl = "http://postgisservice-local.apps.data.molw.io/ws/birds/byspecies/"+bird;
+            $.get(zipurl, pinTheMapWithZip, "json")
+            $.get(airporturl, pinTheMapWithAirports, "json")
+        }
+
+        function pinTheMapWithAirports(data) {
+            //TODO fix this whole method
+            //clear the current pins
+            map.removeLayer(airportpinLayerGroup);
+
+            //add the new pins
+            var markerArray = new Array(data.length)
+            for (var i = 0; i < data.length; i++) {
+                birdObs = data[i];
+                markerArray[i] = L.marker([birdObs.coords[1], birdObs.coords[0]]).bindPopup(birdObs.startTime + "\n Number Seen:" + birdObs.numberSeen);
+            }
+
+            airportpinLayerGroup = L.layerGroup(markerArray).addTo(map);
+        }
+
+        function pinTheMapWithZip(data) {
+
+            //TODO fix this
+            //clear the current pins
+            map.removeLayer(zippinLayerGroup);
+
+            //add the new pins
+            var markerArray = new Array(data.length)
+            for (var i = 0; i < data.length; i++) {
+                birdObs = data[i];
+                markerArray[i] = L.marker([birdObs.coords[1], birdObs.coords[0]]).bindPopup(birdObs.startTime + "\n Number Seen:" + birdObs.numberSeen);
+            }
+
+            zippinLayerGroup = L.layerGroup(markerArray).addTo(map);
+        }
+
+        map.on('dragend', getPins);
+        map.on('zoomend', getPins);
+        map.whenReady(getPins)
+
+    </script>
+
+</html>
+
 
 
 

@@ -8,17 +8,27 @@ import os
 @route('/')
 def index():
     return static_file("index.html", root='./')
-    #return "<h1> hello OpenShift Ninja without DB</h1>"
 
 
-# since this is a read only talk to the replicas
+
+@get('/ws/zips')
+def getzips():
+    return "howdy zips"
+
+@get('/ws/airports')
+def getairports():
+    return "howdy airports"
+
+
+
+#This is for the parkpoints data set which may or may not be there
 @get('/db')
 def dbexample():
     try:
         conn = psycopg2.connect(database=os.environ.get('POSTGRES_DB'), user=os.environ.get('POSTGRES_USER'),
-                                host=os.environ.get('POSTGRES_HOST'), password=os.environ.get('POSTGRES_PASSWORD'))
+                            host=os.environ.get('POSTGRES_HOST'), password=os.environ.get('POSTGRES_PASSWORD'))
     except:
-        print(os.environ.get('REPLICA_SERVICE_HOST'))
+        print(os.environ.get('POSTGRES_HOST'))
 
     cur = conn.cursor()
     # cur.execute("""select parkid, name, ST_AsText(the_geom) from parkpoints limit 10""")
@@ -33,6 +43,9 @@ def dbexample():
     conn.close()
 
     return result_string
+
+
+
 
 #For Static files
 
