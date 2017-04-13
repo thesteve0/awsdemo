@@ -51,7 +51,7 @@
             //$.get(airporturl, pinTheMapWithAirports, "json")
         }
 
-        function pinTheMapWithAirports(data) {
+        function pinTheMapWithAirports(dataObject) {
             //TODO fix this whole method
             //clear the current pins
             map.removeLayer(airportpinLayerGroup);
@@ -66,9 +66,8 @@
             airportpinLayerGroup = L.layerGroup(markerArray).addTo(map);
         }
 
-        function pinTheMapWithZip(data) {
-
-            //TODO fix this
+        function pinTheMapWithZip(dataObject) {
+            data = dataObject.results
             //clear the current pins
             map.removeLayer(zippinLayerGroup);
 
@@ -76,7 +75,7 @@
             var markerArray = new Array(data.length)
             for (var i = 0; i < data.length; i++) {
                 zipData = data[i];
-                markerArray[i] = L.marker([zipData.coords[1], zipData.coords[0]]).bindPopup(zipData.zipcode + "\n Number Attendees:" + zipData.count);
+                markerArray[i] = L.marker([zipData.coords[1], zipData.coords[0]]).bindPopup(zipData.zipcode + "<br> Number Attendees: " + zipData.count);
             }
 
             zippinLayerGroup = L.layerGroup(markerArray).addTo(map);

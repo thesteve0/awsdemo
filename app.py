@@ -23,7 +23,7 @@ def getzips():
 
     cur = conn.cursor()
     #TODO eventually remove the limit
-    cur.execute("""select zipcode, count, ST_AsText(the_geom) from zipcodes LIMIT 100""")
+    cur.execute("""select zipcode, count, ST_AsText(the_geom) from zipcodes""")
     rows = cur.fetchall()
 
     for row in rows:
