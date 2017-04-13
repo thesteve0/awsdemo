@@ -2,22 +2,8 @@ __author__ = 'spousty'
 
 import psycopg2
 from bottle import route, run, get, static_file, DEBUG
-import os
+import os,json
 
-def format_result(entries):
-    result = []
-
-    for entry in entries:
-        data = {}
-
-        data['id'] = entry['name']
-        data['latitude'] = str(entry['coordinates'][0])
-        data['longitude'] = str(entry['coordinates'][1])
-        data['name'] = entry['toponymName']
-
-        result.append(data)
-
-    return result
 
 
 @route('/')
@@ -43,15 +29,15 @@ def getzips():
     for row in rows:
         result = {}
         result = {'zipcode': row[0], 'count': row[1]}
-        coords = {}
+        coords = []
         temp_coords = row[2]
         lon = temp_coords[temp_coords.find('(')+ 1:temp_coords.find(' ')]
         lat = temp_coords[temp_coords.find(' '):temp_coords.find(')')]
-        coords = {'lon': lon, 'lat': lat}
-        result['coords': coords]
+        coords = [lon, lat]
+        result['coords'] = coords
         results.append(result)
 
-    return results
+    return json.dumps({'results': list(results)})
 
 @get('/ws/airports')
 def getairports():
