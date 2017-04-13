@@ -4,6 +4,21 @@ import psycopg2
 from bottle import route, run, get, static_file, DEBUG
 import os
 
+def format_result(entries):
+    result = []
+
+    for entry in entries:
+        data = {}
+
+        data['id'] = entry['name']
+        data['latitude'] = str(entry['coordinates'][0])
+        data['longitude'] = str(entry['coordinates'][1])
+        data['name'] = entry['toponymName']
+
+        result.append(data)
+
+    return result
+
 
 @route('/')
 def index():
@@ -13,10 +28,41 @@ def index():
 
 @get('/ws/zips')
 def getzips():
-    return "howdy zips"
+    results = []
+    try:
+        conn = psycopg2.connect(database=os.environ.get('POSTGRES_DB'), user=os.environ.get('POSTGRES_USER'),
+                                host=os.environ.get('POSTGRES_HOST'), password=os.environ.get('POSTGRES_PASSWORD'))
+    except:
+        print("couldn't make connection" + os.environ.get('POSTGRES_HOST'))
+
+    cur = conn.cursor()
+    #TODO eventually remove the limit
+    cur.execute("""select zipcode, count, ST_AsText(the_geom) from zipcodes LIMIT 100""")
+    rows = cur.fetchall()
+
+    for row in rows:
+        result = {}
+        result = {'zipcode': row[0], 'count': row[1]}
+        coords = {}
+        temp_coords = row[2]
+        lon = temp_coords[temp_coords.find('(')+ 1:temp_coords.find(' ')]
+        lat = temp_coords[temp_coords.find(' '):temp_coords.find(')')]
+        coords = {'lon': lon, 'lat': lat}
+        result['coords': coords]
+        results.append(result)
+
+    return results
 
 @get('/ws/airports')
 def getairports():
+    try:
+        conn = psycopg2.connect(database=os.environ.get('POSTGRES_DB'), user=os.environ.get('POSTGRES_USER'),
+                                host=os.environ.get('POSTGRES_HOST'), password=os.environ.get('POSTGRES_PASSWORD'))
+    except:
+        print(os.environ.get('POSTGRES_HOST'))
+
+    cur = conn.cursor()
+
     return "howdy airports"
 
 
