@@ -27,6 +27,11 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
         <script type="text/javascript" src="/static/js/leaflet-providers.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/js/leaflet-beautify-marker-icon.css">
+        <script src="/static/js/leaflet-beautify-marker-icon.js"></script>
+        <script src="/static/js/leaflet-beautify-marker.js"></script>
 
     </head>
     <body>
@@ -52,6 +57,15 @@
         }
 
         function pinTheMapWithAirports(dataObject) {
+
+            //Set up the icon
+            options = {
+                icon: 'plane',
+                borderColor: '#8D208B',
+                textColor: '#8D208B',
+                backgroundColor: 'transparent'
+            };
+
             data = dataObject.results
             //clear the current pins
             map.removeLayer(airportpinLayerGroup);
@@ -60,13 +74,18 @@
             var markerArray = new Array(data.length)
             for (var i = 0; i < data.length; i++) {
                 airportData = data[i];
-                markerArray[i] = L.marker([airportData.coords[1], airportData.coords[0]]).bindPopup(birdObs.name);
+                markerArray[i] = L.marker([airportData.coords[1], airportData.coords[0]], {icon: L.BeautifyIcon.icon(options)}).bindPopup(airportData.name);
             }
 
             airportpinLayerGroup = L.layerGroup(markerArray).addTo(map);
         }
 
         function pinTheMapWithZip(dataObject) {
+            options = {
+                iconShape: 'circle-dot',
+                borderWidth: 5,
+                borderColor: 'red'
+            };
             data = dataObject.results
             //clear the current pins
             map.removeLayer(zippinLayerGroup);
@@ -75,7 +94,7 @@
             var markerArray = new Array(data.length)
             for (var i = 0; i < data.length; i++) {
                 zipData = data[i];
-                markerArray[i] = L.marker([zipData.coords[1], zipData.coords[0]]).bindPopup(zipData.zipcode + "<br> Number Attendees: " + zipData.count);
+                markerArray[i] = L.marker([zipData.coords[1], zipData.coords[0]], { icon: L.BeautifyIcon.icon(options)}).bindPopup(zipData.zipcode + "<br> Number Attendees: " + zipData.count);
             }
 
             zippinLayerGroup = L.layerGroup(markerArray).addTo(map);
