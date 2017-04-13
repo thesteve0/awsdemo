@@ -37,7 +37,7 @@
     <script>
         var map = L.map('map').setView([37.038, -100.06], 5);
         var zippinLayerGroup = L.layerGroup().addTo(map);
-        var airportpinLayerGroup = L.layerGroup().addTo(map);
+        //var airportpinLayerGroup = L.layerGroup().addTo(map);
         // here is a preview for each style https://leaflet-extras.github.io/leaflet-providers/preview/
         var stamenLayer = L.tileLayer.provider('Stamen.Terrain').addTo(map);
 
@@ -46,7 +46,7 @@
             zipurl = "ws/zips";
 
             //TODO fix this
-            airporturl = "ws/airports";
+            //airporturl = "ws/airports";
             $.get(zipurl, pinTheMapWithZip, "json")
             //$.get(airporturl, pinTheMapWithAirports, "json")
         }
