@@ -22,7 +22,6 @@ def getzips():
         print("couldn't make connection" + os.environ.get('POSTGRES_HOST'))
 
     cur = conn.cursor()
-    #TODO eventually remove the limit
     cur.execute("""select zipcode, count, ST_AsText(the_geom) from zipcodes""")
     rows = cur.fetchall()
 
@@ -41,6 +40,7 @@ def getzips():
 
 @get('/ws/airports')
 def getairports():
+    results = []
     try:
         conn = psycopg2.connect(database=os.environ.get('POSTGRES_DB'), user=os.environ.get('POSTGRES_USER'),
                                 host=os.environ.get('POSTGRES_HOST'), password=os.environ.get('POSTGRES_PASSWORD'))
@@ -48,8 +48,22 @@ def getairports():
         print(os.environ.get('POSTGRES_HOST'))
 
     cur = conn.cursor()
+    cur.execute("""select name, ST_AsText(the_geom) from airports WHERE country = 'United States' """)
+    rows = cur.fetchall()
 
-    return "howdy airports"
+    for row in rows:
+        result = {}
+        result = {'name': row[0]}
+        coords = []
+        temp_coords = row[1]
+        lon = temp_coords[temp_coords.find('(')+ 1:temp_coords.find(' ')]
+        lat = temp_coords[temp_coords.find(' '):temp_coords.find(')')]
+        coords = [lon, lat]
+        result['coords'] = coords
+        results.append(result)
+
+    return json.dumps({'results': list(results)})
+
 
 
 
