@@ -37,7 +37,7 @@
     <script>
         var map = L.map('map').setView([37.038, -100.06], 5);
         var zippinLayerGroup = L.layerGroup().addTo(map);
-        //var airportpinLayerGroup = L.layerGroup().addTo(map);
+        var airportpinLayerGroup = L.layerGroup().addTo(map);
         // here is a preview for each style https://leaflet-extras.github.io/leaflet-providers/preview/
         var stamenLayer = L.tileLayer.provider('Stamen.Terrain').addTo(map);
 
@@ -45,22 +45,22 @@
             bounds = map.getBounds();
             zipurl = "ws/zips";
 
-            //TODO fix this
-            //airporturl = "ws/airports";
+
+            airporturl = "ws/airports";
             $.get(zipurl, pinTheMapWithZip, "json")
-            //$.get(airporturl, pinTheMapWithAirports, "json")
+            $.get(airporturl, pinTheMapWithAirports, "json")
         }
 
         function pinTheMapWithAirports(dataObject) {
-            //TODO fix this whole method
+            data = dataObject.results
             //clear the current pins
             map.removeLayer(airportpinLayerGroup);
 
             //add the new pins
             var markerArray = new Array(data.length)
             for (var i = 0; i < data.length; i++) {
-                birdObs = data[i];
-                markerArray[i] = L.marker([birdObs.coords[1], birdObs.coords[0]]).bindPopup(birdObs.startTime + "\n Number Seen:" + birdObs.numberSeen);
+                airportData = data[i];
+                markerArray[i] = L.marker([airportData.coords[1], airportData.coords[0]]).bindPopup(birdObs.name);
             }
 
             airportpinLayerGroup = L.layerGroup(markerArray).addTo(map);
