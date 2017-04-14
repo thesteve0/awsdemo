@@ -48,14 +48,14 @@ def getairports():
         print(os.environ.get('POSTGRES_HOST'))
 
     cur = conn.cursor()
-    cur.execute("""select name, ST_AsText(the_geom) from airports WHERE country = 'United States' """)
+    cur.execute("""select name, passengers, ST_AsText(the_geom) from airports""")
     rows = cur.fetchall()
 
     for row in rows:
         result = {}
-        result = {'name': row[0]}
+        result = {'name': row[0], 'passengers': row[1]}
         coords = []
-        temp_coords = row[1]
+        temp_coords = row[2]
         lon = temp_coords[temp_coords.find('(')+ 1:temp_coords.find(' ')]
         lat = temp_coords[temp_coords.find(' '):temp_coords.find(')')]
         coords = [lon, lat]

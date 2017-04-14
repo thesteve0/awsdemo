@@ -77,7 +77,7 @@ Beautify Markers come from here https://github.com/marslan390/BeautifyMarker
             var markerArray = new Array(data.length)
             for (var i = 0; i < data.length; i++) {
                 airportData = data[i];
-                markerArray[i] = L.marker([airportData.coords[1], airportData.coords[0]], {icon: L.BeautifyIcon.icon(options)}).bindPopup(airportData.name);
+                markerArray[i] = L.marker([airportData.coords[1], airportData.coords[0]], {icon: L.BeautifyIcon.icon(options)}).bindPopup(airportData.name + "<br> Passengers: " + airportData.passengers);
             }
 
             airportpinLayerGroup = L.layerGroup(markerArray).addTo(map);
